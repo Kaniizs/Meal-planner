@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "166763608702",
+    "project_id": "login-register-firebase-4e988",
+    "storage_bucket": "login-register-firebase-4e988.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:166763608702:android:3daaa5b401ccc990fd362f",
+        "android_client_info": {
+          "package_name": "org.classapp.mealplanner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpxljzYb4VcKrb3RDLdSTSe64OfnsN3mg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
