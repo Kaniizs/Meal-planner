@@ -2,6 +2,7 @@ package org.classapp.mealplanner20
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,6 +36,12 @@ fun AddScreen(context: Context) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Image(
+                painter = painterResource(id = R.drawable.food),
+                contentDescription = "Food",
+                modifier = Modifier.size(350.dp)
+            )
+
             Button(
                 onClick = {
                     // Create intent to navigate to FoodList activity
@@ -51,7 +59,7 @@ fun AddScreen(context: Context) {
                 ),
             ) {
                 Text(
-                    text = "Add Food List",
+                    text = "Add a new food list here!",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )

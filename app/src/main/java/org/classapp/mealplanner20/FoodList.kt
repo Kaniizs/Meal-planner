@@ -39,7 +39,7 @@ class FoodList : AppCompatActivity() {
             // Get the data from the EditText fields
             val foodName = foodNameEditText.text.toString()
             val foodType = categoryEditText.text.toString()
-            val foodCalories = caloriesEditText.text.toString()
+            val foodCalories = caloriesEditText.text.toString().toInt() // Parse to Int
 
             // Create a Food object
             val food = Food(foodName, foodType, foodCalories)
