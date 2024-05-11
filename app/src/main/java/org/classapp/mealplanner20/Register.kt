@@ -17,6 +17,7 @@ class Register : AppCompatActivity() {
 
     private lateinit var editTextEmail: EditText
     private lateinit var editTextPassword: EditText
+    private lateinit var editTextConfirmPassword: EditText
     private lateinit var buttonReg: Button
     private lateinit var progressBar : ProgressBar
     private lateinit var auth: FirebaseAuth // Initialize FirebaseAuth instance\
@@ -38,6 +39,7 @@ class Register : AppCompatActivity() {
 
         editTextEmail = findViewById(R.id.Email)
         editTextPassword = findViewById(R.id.Password)
+        editTextConfirmPassword = findViewById(R.id.Confirm_password)
         buttonReg = findViewById(R.id.button_register)
         progressBar = findViewById(R.id.progressbar)
         textView = findViewById(R.id.goToLoginText)
@@ -53,12 +55,17 @@ class Register : AppCompatActivity() {
 
             val email = editTextEmail.text.toString().trim()
             val password = editTextPassword.text.toString().trim()
+            val confirmPassword = editTextConfirmPassword.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
                 // Show toast message if email or password is empty
                 Toast.makeText(this, "Email or password cannot be empty", Toast.LENGTH_SHORT).show()
                 progressBar.visibility = View.GONE
-            } else {
+            } else if (password != confirmPassword){
+                Toast.makeText(this, "Password not matched.", Toast.LENGTH_SHORT).show()
+                progressBar.visibility = View.GONE
+            }
+            else {
                 // Create user with email and password using FirebaseAuth
                 auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) { task ->

@@ -1,7 +1,8 @@
 package org.classapp.mealplanner20
 
-import android.content.Intent
+
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,14 +20,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.navigation.compose.rememberNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import org.classapp.mealplanner20.ui.theme.Mealplanner20Theme
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import org.classapp.mealplanner20.ui.theme.Mealplanner20Theme
 
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
@@ -41,7 +42,7 @@ class MainActivity : ComponentActivity() {
             Mealplanner20Theme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     if (currentUser != null) {
                         HomeScreenWithNavBar(context = this)
@@ -99,7 +100,7 @@ fun HomeScreenWithNavBar(context: Context) {
                 HomeScreen()
             }
             composable( route = DestinationScreen.Add.route ) {
-                AddScreen()
+                AddScreen(context = context)
             }
             composable( route = DestinationScreen.Profile.route ) {
                 ProfileScreen(context = context)
