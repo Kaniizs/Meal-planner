@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "org.classapp.mealplanner"
+    namespace = "org.classapp.mealplanner20"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "org.classapp.mealplanner"
+        applicationId = "org.classapp.mealplanner20"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -39,7 +39,6 @@ android {
     }
     buildFeatures {
         compose = true
-        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
