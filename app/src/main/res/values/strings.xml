@@ -15,5 +15,8 @@
     <string name="food_name">Food Name</string>
     <string name="submit">Add!</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="done">Done</string>
+    <string name="username">Username</string>
+    <string name="calories_amount">Calories amount</string>
 
 </resources>

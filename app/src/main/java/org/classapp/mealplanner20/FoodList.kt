@@ -47,9 +47,8 @@ class FoodList : AppCompatActivity() {
             // Push the food object to Firebase Realtime Database with the key as food name
             val database = FirebaseDatabase.getInstance()
             val myRef = database.reference.child("Foods")
-            val foodId = myRef.push().key // Generate unique key for food entry
-            if (foodId != null) {
-                myRef.child(foodId).setValue(food).addOnSuccessListener {
+            if (foodName != null) {
+                myRef.child(foodName).setValue(food).addOnSuccessListener {
                     // Clear EditText fields after submitting
                     foodNameEditText.setText("")
                     categoryEditText.setText("")

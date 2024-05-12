@@ -1,8 +1,16 @@
 package org.classapp.mealplanner20
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,6 +18,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -21,29 +31,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.firebase.database.*
-
-fun getFoodData(onDataLoaded: (List<Food>) -> Unit, onError: (DatabaseError) -> Unit) {
-    val database = FirebaseDatabase.getInstance()
-    val ref = database.getReference("Foods")
-
-    ref.addListenerForSingleValueEvent(object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            val foodList = mutableListOf<Food>()
-            for (childSnapshot in snapshot.children) {
-                val food = childSnapshot.getValue(Food::class.java)
-                food?.let {
-                    foodList.add(it)
-                }
-            }
-            onDataLoaded(foodList)
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-            onError(error)
-        }
-    })
-}
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 @Composable
 fun FoodItem(food: Food) {
@@ -92,9 +84,10 @@ fun FoodItem(food: Food) {
 @Composable
 fun HomeScreen() {
     val foodList = remember { mutableStateListOf<Food>() }
+    val limitCalories = remember { mutableIntStateOf(0) }
 
     LaunchedEffect(Unit) {
-        fetchDataFromDatabase(foodList)
+        fetchDataFromDatabase(foodList, limitCalories)
     }
 
     val totalCalories = foodList.sumOf { it.calories ?: 0 }
@@ -158,9 +151,11 @@ fun HomeScreen() {
                 }
             }
 
+            val userLimitCalories = limitCalories.intValue
+
             Text(
-                text = if (totalCalories > 2000) {
-                    "You have eaten too much today!"
+                text = if (totalCalories > userLimitCalories) {
+                    "You have exceeded your daily calorie limit of $userLimitCalories calories!"
                 } else {
                     "Today, you have eaten a total of $totalCalories calories"
                 },
@@ -173,10 +168,14 @@ fun HomeScreen() {
     }
 }
 
-private fun fetchDataFromDatabase(foodList: MutableList<Food>) {
+private fun fetchDataFromDatabase(foodList: MutableList<Food>, limitCalories: MutableState<Int>) {
     val database = FirebaseDatabase.getInstance()
     val ref = database.getReference("Foods")
+    val currentUser = FirebaseAuth.getInstance().currentUser
+    val userEmail = currentUser?.email ?: ""
+    val userProfileRef = database.getReference("userProfile").child(userEmail.replace(".", "_"))
 
+    // Add ValueEventListener to fetch both food list and limit calories
     ref.addValueEventListener(object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             val newFoodList = mutableListOf<Food>()
@@ -188,6 +187,20 @@ private fun fetchDataFromDatabase(foodList: MutableList<Food>) {
             }
             foodList.clear()
             foodList.addAll(newFoodList)
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            // Handle error
+        }
+    })
+
+    // Fetch user's calorie limit
+    userProfileRef.addValueEventListener(object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            val limit = snapshot.child("limitCalories").getValue(Int::class.java)
+            limit?.let {
+                limitCalories.value = it
+            }
         }
 
         override fun onCancelled(error: DatabaseError) {
